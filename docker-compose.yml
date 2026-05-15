@@ -8,6 +8,8 @@ services:
       MYSQL_USER: honeybee
       MYSQL_PASSWORD: honeybeepw
     volumes: ["mysql_data:/var/lib/mysql"]
+    ports:
+      - "3307:3306"
     # host port binding removed — core reaches mysql via internal network
     healthcheck:
       test: ["CMD", "mysqladmin", "ping", "-h", "127.0.0.1", "-uroot", "-prootpw"]
