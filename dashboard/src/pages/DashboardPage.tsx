@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import api from "../api/client";
 import { useWebSocket } from "../hooks/useWebSocket";
+import { LiveAttackMap } from "../components/LiveAttackMap";
 
 interface Stats {
   total_events: number;
@@ -89,6 +90,9 @@ export default function DashboardPage() {
         <StatCard label="Total events" value={stats?.total_events} sub="Captured attacks"               iconPath={I.bolt}    tone="amber" />
         <StatCard label="Unique IPs"   value={stats?.unique_ips}   sub="Distinct attackers"             iconPath={I.globe}   tone="red" />
       </div>
+
+      {/* Live Map */}
+      <LiveAttackMap />
 
       {/* Detail cards */}
       <div className="grid md:grid-cols-2 gap-5">

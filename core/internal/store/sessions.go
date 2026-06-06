@@ -14,10 +14,12 @@ import (
 func (s *Store) CreateSession(ctx context.Context, sess *models.Session) (int64, error) {
 	res, err := s.DB.ExecContext(ctx,
 		`INSERT INTO sessions(org_id, node_id, deploy_id, pot_id, session_id,
-		                     src_ip, src_port, dst_port, started_at)
-		 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+		                     src_ip, src_port, dst_port, started_at,
+		                     country_code, city, lat, lon)
+		 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
 		sess.OrgID, sess.NodeID, sess.DeployID, sess.PotID, sess.SessionID,
-		sess.SrcIP, sess.SrcPort, sess.DstPort, sess.StartedAt)
+		sess.SrcIP, sess.SrcPort, sess.DstPort, sess.StartedAt,
+		sess.CountryCode, sess.City, sess.Lat, sess.Lon)
 	if err != nil {
 		return 0, fmt.Errorf("insert session: %w", err)
 	}
@@ -33,7 +35,8 @@ func (s *Store) GetSession(ctx context.Context, orgID, id int64) (*models.Sessio
 	var sess models.Session
 	err := s.DB.GetContext(ctx, &sess,
 		`SELECT id, org_id, node_id, deploy_id, pot_id, session_id,
-		        src_ip, src_port, dst_port, started_at, ended_at, duration_secs
+		        src_ip, src_port, dst_port, started_at, ended_at, duration_secs,
+		        country_code, city, lat, lon
 		 FROM sessions WHERE id = ? AND org_id = ?`, id, orgID)
 	if errors.Is(err, sql.ErrNoRows) {
 		return nil, ErrNotFound
@@ -46,7 +49,8 @@ func (s *Store) GetSessionBySID(ctx context.Context, sessionID string) (*models.
 	var sess models.Session
 	err := s.DB.GetContext(ctx, &sess,
 		`SELECT id, org_id, node_id, deploy_id, pot_id, session_id,
-		        src_ip, src_port, dst_port, started_at, ended_at, duration_secs
+		        src_ip, src_port, dst_port, started_at, ended_at, duration_secs,
+		        country_code, city, lat, lon
 		 FROM sessions WHERE session_id = ?`, sessionID)
 	if errors.Is(err, sql.ErrNoRows) {
 		return nil, ErrNotFound
@@ -60,7 +64,8 @@ func (s *Store) ListSessions(ctx context.Context, orgID int64, nodeID int64, pot
 		limit = 100
 	}
 	q := `SELECT id, org_id, node_id, deploy_id, pot_id, session_id,
-	             src_ip, src_port, dst_port, started_at, ended_at, duration_secs
+	             src_ip, src_port, dst_port, started_at, ended_at, duration_secs,
+	             country_code, city, lat, lon
 	      FROM sessions WHERE org_id = ?`
 	args := []any{orgID}
 	if nodeID > 0 {

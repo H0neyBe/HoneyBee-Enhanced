@@ -12,9 +12,13 @@ logs/
 
 # Go
 bin/
+core_bin
 *.exe
 *.test
 *.out
+
+# GeoIP
+*.mmdb
 
 # Env
 .env

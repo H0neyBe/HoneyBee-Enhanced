@@ -4,6 +4,7 @@
     "node_addr": "0.0.0.0:9001",
     "node_public_addr": "",
     "public_http_addr": "",
+    "geo_db_path": "GeoLite2-City.mmdb",
     "allowed_origins": []
   },
   "database": {

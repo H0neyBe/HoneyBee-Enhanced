@@ -105,6 +105,10 @@ type Event struct {
 	Data         string    `json:"data" db:"data"` // raw JSON
 	EventTime    time.Time `json:"event_time" db:"event_time"`
 	CreatedAt    time.Time `json:"created_at" db:"created_at"`
+	CountryCode  string    `json:"country_code" db:"country_code"`
+	City         string    `json:"city" db:"city"`
+	Lat          float64   `json:"lat" db:"lat"`
+	Lon          float64   `json:"lon" db:"lon"`
 }
 
 // PotLogEntry mirrors the pot_logs table row.
@@ -134,6 +138,10 @@ type Session struct {
 	StartedAt    time.Time  `json:"started_at" db:"started_at"`
 	EndedAt      *time.Time `json:"ended_at" db:"ended_at"`
 	DurationSecs int64      `json:"duration_secs" db:"duration_secs"`
+	CountryCode  string     `json:"country_code" db:"country_code"`
+	City         string     `json:"city" db:"city"`
+	Lat          float64    `json:"lat" db:"lat"`
+	Lon          float64    `json:"lon" db:"lon"`
 }
 
 // SessionDataChunk is one ordered chunk of attacker terminal bytes.

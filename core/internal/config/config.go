@@ -55,6 +55,7 @@ type ServerConfig struct {
 	NodeAddr       string   `yaml:"node_addr"       json:"node_addr"`
 	NodePublicAddr string   `yaml:"node_public_addr" json:"node_public_addr"`
 	PublicHTTPAddr string   `yaml:"public_http_addr" json:"public_http_addr"`
+	GeoDBPath      string   `yaml:"geo_db_path"      json:"geo_db_path"`
 	AllowedOrigins []string `yaml:"allowed_origins" json:"allowed_origins"`
 }
 
@@ -124,6 +125,7 @@ func defaultConfig() *Config {
 		Server: ServerConfig{
 			HTTPAddr:       "0.0.0.0:5100",
 			NodeAddr:       "0.0.0.0:9001",
+			GeoDBPath:      "GeoLite2-City.mmdb",
 			AllowedOrigins: nil, // nil = auto-allow loopback + RFC1918 LAN origins
 		},
 		Database: DatabaseConfig{

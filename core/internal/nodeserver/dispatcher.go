@@ -140,6 +140,7 @@ func (d *Dispatcher) handlePotEvent(ctx context.Context, sess *Session, env *pro
 	if dep != nil {
 		depID = &dep.ID
 	}
+	geo := LookupIP(pe.SourceIP)
 	ev := &models.Event{
 		OrgID:        sess.orgID,
 		NodeID:       sess.nodeID,
@@ -152,6 +153,10 @@ func (d *Dispatcher) handlePotEvent(ctx context.Context, sess *Session, env *pro
 		DestPort:     pe.DestPort,
 		Data:         dataStr,
 		EventTime:    pe.EventTime,
+		CountryCode:  geo.CountryCode,
+		City:         geo.City,
+		Lat:          geo.Lat,
+		Lon:          geo.Lon,
 	}
 	if _, err := d.store.InsertEvent(ctx, ev); err != nil {
 		d.logger.Warn("insert event", slog.Any("err", err))
@@ -237,16 +242,21 @@ func (d *Dispatcher) handleSessionStart(ctx context.Context, sess *Session, env 
 	if dep != nil {
 		depID = &dep.ID
 	}
+	geo := LookupIP(ss.SrcIP)
 	row := &models.Session{
-		OrgID:     sess.orgID,
-		NodeID:    sess.nodeID,
-		DeployID:  depID,
-		PotID:     ss.PotID,
-		SessionID: ss.SessionID,
-		SrcIP:     ss.SrcIP,
-		SrcPort:   ss.SrcPort,
-		DstPort:   ss.DstPort,
-		StartedAt: ss.StartedAt,
+		OrgID:       sess.orgID,
+		NodeID:      sess.nodeID,
+		DeployID:    depID,
+		PotID:       ss.PotID,
+		SessionID:   ss.SessionID,
+		SrcIP:       ss.SrcIP,
+		SrcPort:     ss.SrcPort,
+		DstPort:     ss.DstPort,
+		StartedAt:   ss.StartedAt,
+		CountryCode: geo.CountryCode,
+		City:        geo.City,
+		Lat:         geo.Lat,
+		Lon:         geo.Lon,
 	}
 	if _, err := d.store.CreateSession(ctx, row); err != nil {
 		d.logger.Warn("create session", slog.Any("err", err))

@@ -1,5 +1,7 @@
+name: honeybee-v3
 services:
   mysql:
+    container_name: honeybee-v3-mysql
     image: mysql:8.4
     restart: unless-stopped
     environment:
@@ -18,6 +20,7 @@ services:
       retries: 10
 
   core:
+    container_name: honeybee-v3-core
     build:
       context: .
       dockerfile: core/Dockerfile
@@ -33,8 +36,11 @@ services:
       - "5100:5100"   # HTTP API
       - "9001:9001"   # Node TCP
     restart: unless-stopped
+    volumes:
+      - ./GeoLite2-City.mmdb:/app/GeoLite2-City.mmdb:ro
 
   dashboard:
+    container_name: honeybee-v3-dashboard
     build:
       context: ./dashboard
     depends_on: [core]

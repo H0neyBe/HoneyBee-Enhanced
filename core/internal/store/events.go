@@ -24,10 +24,12 @@ type EventFilter struct {
 func (s *Store) InsertEvent(ctx context.Context, e *models.Event) (int64, error) {
 	res, err := s.DB.ExecContext(ctx,
 		`INSERT INTO events(org_id, node_id, deploy_id, pot_id, honeypot_type, event_type,
-		                    source_ip, source_port, dest_port, data, event_time)
-		 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+		                    source_ip, source_port, dest_port, data, event_time,
+		                    country_code, city, lat, lon)
+		 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
 		e.OrgID, e.NodeID, e.DeployID, e.PotID, e.HoneypotType, e.EventType,
-		e.SourceIP, e.SourcePort, e.DestPort, e.Data, e.EventTime)
+		e.SourceIP, e.SourcePort, e.DestPort, e.Data, e.EventTime,
+		e.CountryCode, e.City, e.Lat, e.Lon)
 	if err != nil {
 		return 0, fmt.Errorf("insert event: %w", err)
 	}
@@ -41,7 +43,8 @@ func (s *Store) InsertEvent(ctx context.Context, e *models.Event) (int64, error)
 // ListEvents returns events matching the filter.
 func (s *Store) ListEvents(ctx context.Context, orgID int64, f EventFilter) ([]models.Event, error) {
 	q := `SELECT id, org_id, node_id, deploy_id, pot_id, honeypot_type, event_type,
-	             source_ip, source_port, dest_port, data, event_time, created_at
+	             source_ip, source_port, dest_port, data, event_time, created_at,
+	             country_code, city, lat, lon
 	      FROM events WHERE org_id = ?`
 	args := []any{orgID}
 	if f.NodeID > 0 {

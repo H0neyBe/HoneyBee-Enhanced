@@ -82,6 +82,15 @@ func main() {
 		tlsCfg = &tls.Config{Certificates: []tls.Certificate{cert}, MinVersion: tls.VersionTLS13}
 	}
 
+	if cfg.Server.GeoDBPath != "" {
+		if err := nodeserver.InitGeoIP(cfg.Server.GeoDBPath); err != nil {
+			logger.Warn("geoip database not loaded", slog.String("path", cfg.Server.GeoDBPath), slog.Any("err", err))
+		} else {
+			logger.Info("geoip database loaded", slog.String("path", cfg.Server.GeoDBPath))
+			defer nodeserver.CloseGeoIP()
+		}
+	}
+
 	hub := ws.NewHub(logger, cfg.Server.AllowedOrigins)
 	ns := nodeserver.NewServer(nodeserver.Config{
 		Addr:      cfg.Server.NodeAddr,

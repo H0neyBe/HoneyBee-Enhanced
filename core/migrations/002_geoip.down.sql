@@ -1,0 +1,9 @@
+ALTER TABLE events DROP COLUMN country_code;
+ALTER TABLE events DROP COLUMN city;
+ALTER TABLE events DROP COLUMN lat;
+ALTER TABLE events DROP COLUMN lon;
+
+ALTER TABLE sessions DROP COLUMN country_code;
+ALTER TABLE sessions DROP COLUMN city;
+ALTER TABLE sessions DROP COLUMN lat;
+ALTER TABLE sessions DROP COLUMN lon;
